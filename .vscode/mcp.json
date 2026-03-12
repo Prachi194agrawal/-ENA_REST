@@ -1,0 +1,13 @@
+{
+  "servers": {
+    "ena-mcp": {
+      "type": "stdio",
+      "command": "ena-mcp",
+      "env": {
+        "ENA_RATE_LIMIT": "5",
+        "ENA_CACHE_TTL": "300",
+        "LOG_LEVEL": "INFO"
+      }
+    }
+  }
+}
