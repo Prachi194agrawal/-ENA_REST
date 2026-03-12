@@ -41,9 +41,7 @@ class SearchParams(BaseModel):
 
     result: RESULT_TYPES = Field(
         ...,
-        description=(
-            "ENA result type to search (e.g. 'study', 'sample', 'run', 'sequence')."
-        ),
+        description=("ENA result type to search (e.g. 'study', 'sample', 'run', 'sequence')."),
     )
     query: str | None = Field(
         None,

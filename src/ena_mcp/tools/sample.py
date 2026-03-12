@@ -134,11 +134,18 @@ def register_sample_tools(server: Server, client: ENAClient) -> None:
                     raise ENANotFoundError(accession)
                 return [TextContent(type="text", text=json.dumps(records[0], indent=2))]
             except ENANotFoundError as exc:
-                return [TextContent(type="text", text=json.dumps({
-                    "error": "not_found",
-                    "message": str(exc),
-                    "accession": accession,
-                }))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "error": "not_found",
+                                "message": str(exc),
+                                "accession": accession,
+                            }
+                        ),
+                    )
+                ]
 
         if name == "search_samples":
             # Build query from composite filters
@@ -164,15 +171,30 @@ def register_sample_tools(server: Server, client: ENAClient) -> None:
                 limit=limit,
                 offset=offset,
             )
-            return [TextContent(type="text", text=json.dumps({
-                "query": query,
-                "count": len(records),
-                "offset": offset,
-                "limit": limit,
-                "samples": records,
-            }, indent=2))]
+            return [
+                TextContent(
+                    type="text",
+                    text=json.dumps(
+                        {
+                            "query": query,
+                            "count": len(records),
+                            "offset": offset,
+                            "limit": limit,
+                            "samples": records,
+                        },
+                        indent=2,
+                    ),
+                )
+            ]
 
-        return [TextContent(type="text", text=json.dumps({
-            "error": "unknown_tool",
-            "message": f"Tool {name!r} is not handled by this module.",
-        }))]
+        return [
+            TextContent(
+                type="text",
+                text=json.dumps(
+                    {
+                        "error": "unknown_tool",
+                        "message": f"Tool {name!r} is not handled by this module.",
+                    }
+                ),
+            )
+        ]

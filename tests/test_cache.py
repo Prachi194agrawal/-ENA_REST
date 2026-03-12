@@ -6,8 +6,6 @@ from __future__ import annotations
 
 import time
 
-import pytest
-
 from ena_mcp.utils.cache import ResponseCache
 
 

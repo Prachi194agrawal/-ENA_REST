@@ -21,6 +21,7 @@ from ena_mcp.client.ena_client import (
     ENAServerError,
 )
 
+
 def _json_response(data: Any, status: int = 200) -> httpx.Response:
     return httpx.Response(
         status_code=status,

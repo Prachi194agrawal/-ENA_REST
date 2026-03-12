@@ -56,7 +56,8 @@ class TestStudyTools:
         register_study_tools(server, mock_client)
 
         results = await _call_tool(
-            server, "list_study_runs",
+            server,
+            "list_study_runs",
             {"study_accession": "PRJEB12345", "limit": 5},
         )
         data = json.loads(results[0].text)
@@ -69,7 +70,8 @@ class TestStudyTools:
         register_study_tools(server, mock_client)
 
         results = await _call_tool(
-            server, "list_study_samples",
+            server,
+            "list_study_samples",
             {"study_accession": "PRJEB12345"},
         )
         data = json.loads(results[0].text)

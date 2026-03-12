@@ -5,7 +5,6 @@ Tests for search tool module.
 from __future__ import annotations
 
 import json
-from unittest.mock import AsyncMock
 
 import pytest
 from mcp.server import Server
@@ -33,11 +32,15 @@ class TestSearchTools:
         server = Server("test")
         register_search_tools(server, mock_client)
 
-        results = await _call_tool(server, "search_ena", {
-            "result": "study",
-            "query": 'scientific_name="Homo sapiens"',
-            "limit": 5,
-        })
+        results = await _call_tool(
+            server,
+            "search_ena",
+            {
+                "result": "study",
+                "query": 'scientific_name="Homo sapiens"',
+                "limit": 5,
+            },
+        )
         data = json.loads(results[0].text)
         assert data["result_type"] == "study"
         assert "records" in data
@@ -46,11 +49,15 @@ class TestSearchTools:
         server = Server("test")
         register_search_tools(server, mock_client)
 
-        results = await _call_tool(server, "search_ena", {
-            "result": "sample",
-            "tax_id": 9606,
-            "limit": 10,
-        })
+        results = await _call_tool(
+            server,
+            "search_ena",
+            {
+                "result": "sample",
+                "tax_id": 9606,
+                "limit": 10,
+            },
+        )
         data = json.loads(results[0].text)
         # The query should include tax_id=9606
         assert "9606" in (data.get("query") or "")
@@ -59,10 +66,14 @@ class TestSearchTools:
         server = Server("test")
         register_search_tools(server, mock_client)
 
-        results = await _call_tool(server, "search_ena", {
-            "result": "run",
-            "instrument_platform": "ILLUMINA",
-        })
+        results = await _call_tool(
+            server,
+            "search_ena",
+            {
+                "result": "run",
+                "instrument_platform": "ILLUMINA",
+            },
+        )
         data = json.loads(results[0].text)
         assert "ILLUMINA" in (data.get("query") or "")
 
@@ -70,11 +81,15 @@ class TestSearchTools:
         server = Server("test")
         register_search_tools(server, mock_client)
 
-        results = await _call_tool(server, "search_by_taxon", {
-            "tax_id": 9606,
-            "result": "study",
-            "include_subordinate_taxa": False,
-        })
+        results = await _call_tool(
+            server,
+            "search_by_taxon",
+            {
+                "tax_id": 9606,
+                "result": "study",
+                "include_subordinate_taxa": False,
+            },
+        )
         data = json.loads(results[0].text)
         assert data["tax_id"] == 9606
         call_args = mock_client.portal_search.call_args
@@ -84,12 +99,15 @@ class TestSearchTools:
         server = Server("test")
         register_search_tools(server, mock_client)
 
-        results = await _call_tool(server, "search_by_taxon", {
-            "tax_id": 9605,
-            "result": "sample",
-            "include_subordinate_taxa": True,
-        })
-        data = json.loads(results[0].text)
+        await _call_tool(
+            server,
+            "search_by_taxon",
+            {
+                "tax_id": 9605,
+                "result": "sample",
+                "include_subordinate_taxa": True,
+            },
+        )
         call_args = mock_client.portal_search.call_args
         assert "tax_tree=9605" in call_args.kwargs.get("query", "")
 

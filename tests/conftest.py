@@ -4,16 +4,12 @@ Shared pytest fixtures and helpers.
 
 from __future__ import annotations
 
-import json
-from collections.abc import AsyncIterator
 from typing import Any
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-import pytest_asyncio
 
 from ena_mcp.client.ena_client import ENAClient
-
 
 # ---------------------------------------------------------------------------
 # Sample fixture data
@@ -58,7 +54,7 @@ RUN_FIXTURE: dict[str, Any] = {
     "read_count": 50000000,
     "base_count": 15000000000,
     "fastq_ftp": "ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456_1.fastq.gz;"
-                 "ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456_2.fastq.gz",
+    "ftp.sra.ebi.ac.uk/vol1/fastq/ERR123/ERR123456_2.fastq.gz",
     "fastq_md5": "abc123;def456",
     "first_public": "2020-02-01",
 }
@@ -90,6 +86,7 @@ TAXONOMY_FIXTURE: list[dict[str, Any]] = [
 # ---------------------------------------------------------------------------
 # Mock client fixture
 # ---------------------------------------------------------------------------
+
 
 @pytest.fixture
 def mock_client() -> MagicMock:
@@ -127,9 +124,11 @@ def mock_client() -> MagicMock:
         ]
     )
     client.get_taxonomy = AsyncMock(return_value=TAXONOMY_FIXTURE)
-    client.get_results = AsyncMock(return_value=[
-        {"result": "study", "description": "Research studies"},
-        {"result": "sample", "description": "Biological samples"},
-    ])
+    client.get_results = AsyncMock(
+        return_value=[
+            {"result": "study", "description": "Research studies"},
+            {"result": "sample", "description": "Biological samples"},
+        ]
+    )
     client.aclose = AsyncMock()
     return client

@@ -87,50 +87,102 @@ def register_sequence_tools(server: Server, client: ENAClient) -> None:
             accession: str = arguments["accession"].strip().upper()
             try:
                 fasta = await client.browser_fasta(accession)
-                return [TextContent(type="text", text=json.dumps({
-                    "accession": accession,
-                    "format": "fasta",
-                    "sequence": fasta,
-                }, indent=2))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "accession": accession,
+                                "format": "fasta",
+                                "sequence": fasta,
+                            },
+                            indent=2,
+                        ),
+                    )
+                ]
             except ENANotFoundError as exc:
-                return [TextContent(type="text", text=json.dumps({
-                    "error": "not_found",
-                    "message": str(exc),
-                    "accession": accession,
-                }))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "error": "not_found",
+                                "message": str(exc),
+                                "accession": accession,
+                            }
+                        ),
+                    )
+                ]
 
         if name == "get_record_xml":
             accession = arguments["accession"].strip().upper()
             try:
                 xml = await client.browser_xml(accession)
-                return [TextContent(type="text", text=json.dumps({
-                    "accession": accession,
-                    "format": "xml",
-                    "record": xml,
-                }, indent=2))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "accession": accession,
+                                "format": "xml",
+                                "record": xml,
+                            },
+                            indent=2,
+                        ),
+                    )
+                ]
             except ENANotFoundError as exc:
-                return [TextContent(type="text", text=json.dumps({
-                    "error": "not_found",
-                    "message": str(exc),
-                    "accession": accession,
-                }))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "error": "not_found",
+                                "message": str(exc),
+                                "accession": accession,
+                            }
+                        ),
+                    )
+                ]
 
         if name == "get_taxonomy_info":
             tax_id: int = int(arguments["tax_id"])
             records = await client.get_taxonomy(tax_id)
             if not records:
-                return [TextContent(type="text", text=json.dumps({
-                    "error": "not_found",
-                    "message": f"No taxonomy records found for tax_id={tax_id}",
-                    "tax_id": tax_id,
-                }))]
-            return [TextContent(type="text", text=json.dumps({
-                "tax_id": tax_id,
-                "count": len(records),
-                "records": records,
-            }, indent=2))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "error": "not_found",
+                                "message": f"No taxonomy records found for tax_id={tax_id}",
+                                "tax_id": tax_id,
+                            }
+                        ),
+                    )
+                ]
+            return [
+                TextContent(
+                    type="text",
+                    text=json.dumps(
+                        {
+                            "tax_id": tax_id,
+                            "count": len(records),
+                            "records": records,
+                        },
+                        indent=2,
+                    ),
+                )
+            ]
 
-        return [TextContent(type="text", text=json.dumps({
-            "error": "unknown_tool",
-            "message": f"Tool {name!r} is not handled by this module.",
-        }))]
+        return [
+            TextContent(
+                type="text",
+                text=json.dumps(
+                    {
+                        "error": "unknown_tool",
+                        "message": f"Tool {name!r} is not handled by this module.",
+                    }
+                ),
+            )
+        ]

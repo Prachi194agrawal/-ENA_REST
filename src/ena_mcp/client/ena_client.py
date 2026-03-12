@@ -24,7 +24,6 @@ from typing import Any
 
 import httpx
 from tenacity import (
-    RetryError,
     retry,
     retry_if_exception_type,
     stop_after_attempt,
@@ -44,14 +43,15 @@ PORTAL_BASE = os.getenv("ENA_PORTAL_BASE", "https://www.ebi.ac.uk/ena/portal/api
 BROWSER_BASE = os.getenv("ENA_BROWSER_BASE", "https://www.ebi.ac.uk/ena/browser/api")
 DEFAULT_TIMEOUT = float(os.getenv("ENA_TIMEOUT", "30"))
 MAX_RETRIES = int(os.getenv("ENA_MAX_RETRIES", "3"))
-RATE_LIMIT = float(os.getenv("ENA_RATE_LIMIT", "5"))   # req/s
-CACHE_TTL = float(os.getenv("ENA_CACHE_TTL", "300"))    # seconds
+RATE_LIMIT = float(os.getenv("ENA_RATE_LIMIT", "5"))  # req/s
+CACHE_TTL = float(os.getenv("ENA_CACHE_TTL", "300"))  # seconds
 CACHE_SIZE = int(os.getenv("ENA_CACHE_SIZE", "512"))
 
 
 # ---------------------------------------------------------------------------
 # Custom exceptions
 # ---------------------------------------------------------------------------
+
 
 class ENAClientError(Exception):
     """Base class for all ENA client errors."""
@@ -84,6 +84,7 @@ class ENAServerError(ENAClientError):
 # Retry predicate helpers
 # ---------------------------------------------------------------------------
 
+
 def _is_retryable(exc: BaseException) -> bool:
     """Only retry on transient network / server errors."""
     return isinstance(exc, (httpx.TransportError, ENAServerError))
@@ -92,6 +93,7 @@ def _is_retryable(exc: BaseException) -> bool:
 # ---------------------------------------------------------------------------
 # Main client
 # ---------------------------------------------------------------------------
+
 
 class ENAClient:
     """Async HTTP client for ENA REST services.
@@ -135,7 +137,7 @@ class ENAClient:
         """Close the underlying HTTP client."""
         await self._http.aclose()
 
-    async def __aenter__(self) -> "ENAClient":
+    async def __aenter__(self) -> ENAClient:
         return self
 
     async def __aexit__(self, *_: object) -> None:

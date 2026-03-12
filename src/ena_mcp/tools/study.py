@@ -70,6 +70,7 @@ STUDY_SAMPLE_FIELDS = [
 # Tool logic helpers
 # ---------------------------------------------------------------------------
 
+
 async def _get_study(client: ENAClient, accession: str, fields: list[str] | None) -> dict[str, Any]:
     """Fetch a single study record and return a normalised dict."""
     records = await client.portal_search(
@@ -116,6 +117,7 @@ async def _list_study_samples(
 # ---------------------------------------------------------------------------
 # Tool registration
 # ---------------------------------------------------------------------------
+
 
 def register_study_tools(server: Server, client: ENAClient) -> None:  # noqa: C901
     """Register all study-related MCP tools on *server*."""
@@ -219,11 +221,18 @@ def register_study_tools(server: Server, client: ENAClient) -> None:  # noqa: C9
                 record = await _get_study(client, params.accession, params.fields)
                 return [TextContent(type="text", text=json.dumps(record, indent=2))]
             except ENANotFoundError as exc:
-                return [TextContent(type="text", text=json.dumps({
-                    "error": "not_found",
-                    "message": str(exc),
-                    "accession": params.accession,
-                }))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "error": "not_found",
+                                "message": str(exc),
+                                "accession": params.accession,
+                            }
+                        ),
+                    )
+                ]
 
         if name == "list_study_runs":
             acc = arguments["study_accession"]
@@ -231,17 +240,33 @@ def register_study_tools(server: Server, client: ENAClient) -> None:  # noqa: C9
             offset = int(arguments.get("offset", 0))
             try:
                 runs = await _list_study_runs(client, acc, limit, offset)
-                return [TextContent(type="text", text=json.dumps({
-                    "study_accession": acc,
-                    "count": len(runs),
-                    "offset": offset,
-                    "limit": limit,
-                    "runs": runs,
-                }, indent=2))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "study_accession": acc,
+                                "count": len(runs),
+                                "offset": offset,
+                                "limit": limit,
+                                "runs": runs,
+                            },
+                            indent=2,
+                        ),
+                    )
+                ]
             except ENANotFoundError as exc:
-                return [TextContent(type="text", text=json.dumps({
-                    "error": "not_found", "message": str(exc),
-                }))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "error": "not_found",
+                                "message": str(exc),
+                            }
+                        ),
+                    )
+                ]
 
         if name == "list_study_samples":
             acc = arguments["study_accession"]
@@ -249,19 +274,42 @@ def register_study_tools(server: Server, client: ENAClient) -> None:  # noqa: C9
             offset = int(arguments.get("offset", 0))
             try:
                 samples = await _list_study_samples(client, acc, limit, offset)
-                return [TextContent(type="text", text=json.dumps({
-                    "study_accession": acc,
-                    "count": len(samples),
-                    "offset": offset,
-                    "limit": limit,
-                    "samples": samples,
-                }, indent=2))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "study_accession": acc,
+                                "count": len(samples),
+                                "offset": offset,
+                                "limit": limit,
+                                "samples": samples,
+                            },
+                            indent=2,
+                        ),
+                    )
+                ]
             except ENANotFoundError as exc:
-                return [TextContent(type="text", text=json.dumps({
-                    "error": "not_found", "message": str(exc),
-                }))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "error": "not_found",
+                                "message": str(exc),
+                            }
+                        ),
+                    )
+                ]
 
-        return [TextContent(type="text", text=json.dumps({
-            "error": "unknown_tool",
-            "message": f"Tool {name!r} is not handled by this module.",
-        }))]
+        return [
+            TextContent(
+                type="text",
+                text=json.dumps(
+                    {
+                        "error": "unknown_tool",
+                        "message": f"Tool {name!r} is not handled by this module.",
+                    }
+                ),
+            )
+        ]

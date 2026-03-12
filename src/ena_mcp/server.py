@@ -30,13 +30,13 @@ from dotenv import load_dotenv
 # Load .env before anything else so env-vars are available at import time
 load_dotenv()
 
-import mcp.server.stdio as mcp_stdio
-from mcp.server import NotificationOptions, Server
-from mcp.server.models import InitializationOptions
+import mcp.server.stdio as mcp_stdio  # noqa: E402
+from mcp.server import NotificationOptions, Server  # noqa: E402
+from mcp.server.models import InitializationOptions  # noqa: E402
 
-from ena_mcp import __version__
-from ena_mcp.client.ena_client import ENAClient
-from ena_mcp.tools import (
+from ena_mcp import __version__  # noqa: E402
+from ena_mcp.client.ena_client import ENAClient  # noqa: E402
+from ena_mcp.tools import (  # noqa: E402
     register_experiment_tools,
     register_run_tools,
     register_sample_tools,
@@ -61,6 +61,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Server factory
 # ---------------------------------------------------------------------------
+
 
 def create_server() -> tuple[Server, ENAClient]:
     """Instantiate the MCP server and ENA client; register all tools."""
@@ -102,7 +103,7 @@ def create_server() -> tuple[Server, ENAClient]:
         ]
 
     @server.get_prompt()
-    async def _get_prompt(name: str, arguments: dict | None):  # type: ignore[no-untyped-def]
+    async def _get_prompt(name: str, arguments: dict[str, str] | None):  # type: ignore[no-untyped-def]
         from mcp.types import GetPromptResult, PromptMessage, TextContent
 
         if name == "ena_query_guide":
@@ -166,6 +167,7 @@ def _build_query_guide(topic: str) -> str:  # noqa: PLR0912
 # ---------------------------------------------------------------------------
 # Async main
 # ---------------------------------------------------------------------------
+
 
 async def async_main() -> None:
     server, client = create_server()

@@ -4,7 +4,6 @@ Unit tests for the token-bucket RateLimiter.
 
 from __future__ import annotations
 
-import asyncio
 import time
 
 import pytest

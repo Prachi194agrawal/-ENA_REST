@@ -86,13 +86,27 @@ def register_experiment_tools(server: Server, client: ENAClient) -> None:
                     raise ENANotFoundError(accession)
                 return [TextContent(type="text", text=json.dumps(records[0], indent=2))]
             except ENANotFoundError as exc:
-                return [TextContent(type="text", text=json.dumps({
-                    "error": "not_found",
-                    "message": str(exc),
-                    "accession": accession,
-                }))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "error": "not_found",
+                                "message": str(exc),
+                                "accession": accession,
+                            }
+                        ),
+                    )
+                ]
 
-        return [TextContent(type="text", text=json.dumps({
-            "error": "unknown_tool",
-            "message": f"Tool {name!r} is not handled by this module.",
-        }))]
+        return [
+            TextContent(
+                type="text",
+                text=json.dumps(
+                    {
+                        "error": "unknown_tool",
+                        "message": f"Tool {name!r} is not handled by this module.",
+                    }
+                ),
+            )
+        ]

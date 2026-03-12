@@ -153,14 +153,22 @@ def register_search_tools(server: Server, client: ENAClient) -> None:
                 limit=params.limit,
                 offset=params.offset,
             )
-            return [TextContent(type="text", text=json.dumps({
-                "result_type": params.result,
-                "query": compound_query,
-                "count": len(records),
-                "offset": params.offset,
-                "limit": params.limit,
-                "records": records,
-            }, indent=2))]
+            return [
+                TextContent(
+                    type="text",
+                    text=json.dumps(
+                        {
+                            "result_type": params.result,
+                            "query": compound_query,
+                            "count": len(records),
+                            "offset": params.offset,
+                            "limit": params.limit,
+                            "records": records,
+                        },
+                        indent=2,
+                    ),
+                )
+            ]
 
         if name == "search_by_taxon":
             tax_id: int = arguments["tax_id"]
@@ -179,24 +187,47 @@ def register_search_tools(server: Server, client: ENAClient) -> None:
                 limit=limit,
                 offset=offset,
             )
-            return [TextContent(type="text", text=json.dumps({
-                "tax_id": tax_id,
-                "result_type": result,
-                "include_subordinate_taxa": include_sub,
-                "count": len(records),
-                "offset": offset,
-                "limit": limit,
-                "records": records,
-            }, indent=2))]
+            return [
+                TextContent(
+                    type="text",
+                    text=json.dumps(
+                        {
+                            "tax_id": tax_id,
+                            "result_type": result,
+                            "include_subordinate_taxa": include_sub,
+                            "count": len(records),
+                            "offset": offset,
+                            "limit": limit,
+                            "records": records,
+                        },
+                        indent=2,
+                    ),
+                )
+            ]
 
         if name == "list_result_types":
             result_types = await client.get_results()
-            return [TextContent(type="text", text=json.dumps({
-                "count": len(result_types),
-                "result_types": result_types,
-            }, indent=2))]
+            return [
+                TextContent(
+                    type="text",
+                    text=json.dumps(
+                        {
+                            "count": len(result_types),
+                            "result_types": result_types,
+                        },
+                        indent=2,
+                    ),
+                )
+            ]
 
-        return [TextContent(type="text", text=json.dumps({
-            "error": "unknown_tool",
-            "message": f"Tool {name!r} is not handled by this module.",
-        }))]
+        return [
+            TextContent(
+                type="text",
+                text=json.dumps(
+                    {
+                        "error": "unknown_tool",
+                        "message": f"Tool {name!r} is not handled by this module.",
+                    }
+                ),
+            )
+        ]

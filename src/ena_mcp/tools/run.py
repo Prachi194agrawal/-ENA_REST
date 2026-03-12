@@ -109,11 +109,18 @@ def register_run_tools(server: Server, client: ENAClient) -> None:
                     raise ENANotFoundError(accession)
                 return [TextContent(type="text", text=json.dumps(records[0], indent=2))]
             except ENANotFoundError as exc:
-                return [TextContent(type="text", text=json.dumps({
-                    "error": "not_found",
-                    "message": str(exc),
-                    "accession": accession,
-                }))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "error": "not_found",
+                                "message": str(exc),
+                                "accession": accession,
+                            }
+                        ),
+                    )
+                ]
 
         if name == "get_run_files":
             try:
@@ -126,19 +133,41 @@ def register_run_tools(server: Server, client: ENAClient) -> None:
                     limit=1,
                 )
                 md5s = records[0].get("fastq_md5", "") if records else ""
-                return [TextContent(type="text", text=json.dumps({
-                    "accession": accession,
-                    "download_urls": urls,
-                    "md5_checksums": md5s.split(";") if md5s else [],
-                }, indent=2))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "accession": accession,
+                                "download_urls": urls,
+                                "md5_checksums": md5s.split(";") if md5s else [],
+                            },
+                            indent=2,
+                        ),
+                    )
+                ]
             except ENANotFoundError as exc:
-                return [TextContent(type="text", text=json.dumps({
-                    "error": "not_found",
-                    "message": str(exc),
-                    "accession": accession,
-                }))]
+                return [
+                    TextContent(
+                        type="text",
+                        text=json.dumps(
+                            {
+                                "error": "not_found",
+                                "message": str(exc),
+                                "accession": accession,
+                            }
+                        ),
+                    )
+                ]
 
-        return [TextContent(type="text", text=json.dumps({
-            "error": "unknown_tool",
-            "message": f"Tool {name!r} is not handled by this module.",
-        }))]
+        return [
+            TextContent(
+                type="text",
+                text=json.dumps(
+                    {
+                        "error": "unknown_tool",
+                        "message": f"Tool {name!r} is not handled by this module.",
+                    }
+                ),
+            )
+        ]

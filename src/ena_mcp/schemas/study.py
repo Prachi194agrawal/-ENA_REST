@@ -50,9 +50,7 @@ class StudySearchParams(BaseModel):
 
     accession: str = Field(
         ...,
-        description=(
-            "ENA study accession, e.g. PRJEB12345, ERP001234, or SRP012345."
-        ),
+        description=("ENA study accession, e.g. PRJEB12345, ERP001234, or SRP012345."),
         pattern=r"^(PRJ|ERP|SRP|DRP)[A-Z0-9]+$",
     )
     fields: list[str] | None = Field(
