@@ -14,7 +14,7 @@ The **ENA MCP Server** wraps the [European Nucleotide Archive (ENA)](https://www
 
 | Feature | Description |
 |---|---|
-| **10 MCP tools** | Study, sample, run, experiment, sequence, taxonomy, and search |
+| **14 MCP tools** | Study, sample, run, experiment, sequence, taxonomy, and search |
 | **Caching** | TTL + LRU cache — reduces redundant ENA calls |
 | **Rate limiting** | Token-bucket limiter — polite ENA citizen |
 | **Auto-retry** | Exponential back-off for transient errors |
